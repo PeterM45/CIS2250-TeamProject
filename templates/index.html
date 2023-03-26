@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      * {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #dddddd;
+      }
+
+      h1,
+      h3 {
+        margin: 20px;
+      }
+
+      .scripts {
+        display: flex;
+        flex-direction: row;
+        width: 100vw;
+        justify-content: center;
+        gap: 200px;
+      }
+
+      .scripts-form {
+        margin: 20px;
+        display: flex;
+        flex-direction: column;
+        width: 300px;
+        flex-wrap: wrap;
+      }
+
+      button {
+        font-size: 20px;
+        margin: 20px;
+        padding: 20px;
+        border-radius: 10px;
+        flex: 1;
+        color: white;
+        background-color: rgb(48, 48, 48);
+        cursor: pointer;
+        border: none;
+        transition-duration: 0.4s;
+      }
+
+      button:hover {
+        background-color: white;
+        color: black;
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- RUN SCRIPT FORM -->
+    <h1>Hello Welcome to our Project</h1>
+
+    <div class="scripts">
+      <div class="left-side">
+        <h3>Choose a Province in Canada</h3>
+        <div class="scripts-form">
+          <form method="post" action="/run-script">
+            <button
+              type="submit"
+              class="btn btn-primary"
+              name="script"
+              value="alberta"
+            >
+              Run Alberta
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              name="script"
+              value="britishColumbia"
+            >
+              Run British Columbia
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              name="script"
+              value="newBrunswick"
+            >
+              Run New Brunswick
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              name="script"
+              value="newfoundlandAndLabrador"
+            >
+              Run Newfoundland and Labrador
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              name="script"
+              value="novaScotia"
+            >
+              Run Nova Scotia
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              name="script"
+              value="ontario"
+            >
+              Run Ontario
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              name="script"
+              value="quebec"
+            >
+              Run Québec
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              name="script"
+              value="saskatchewan"
+            >
+              Run Saskatchewan
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div class="right-side">
+        <h3>Choose a Country or State from US</h3>
+        <div class="scripts-form">
+          <form method="post" action="/run-script">
+            <button
+              type="submit"
+              class="btn btn-primary"
+              name="script"
+              value="australia"
+            >
+              Run Australia
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              name="script"
+              value="southAustralia"
+            >
+              Run South Australia
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              name="script"
+              value="unitedStates"
+            >
+              Run United States
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              name="script"
+              value="california"
+            >
+              Run California
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              name="script"
+              value="newZealand"
+            >
+              Run New Zealand
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

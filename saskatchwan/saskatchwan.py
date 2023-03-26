@@ -68,7 +68,7 @@ def main(argv):
         females = {"Rank": rankF, "Year": yearF, "Name": nameF, "Frequency": frequencyF}
         females_df = pd.DataFrame(females)
         females_df.to_csv(
-            "./saskatchwan/saskatchwanFemales.csv",
+            "./saskatchwan/saskatchewanFemales.csv",
             sep=",",
             index=False,
             encoding="utf-8",
@@ -77,7 +77,10 @@ def main(argv):
         males = {"Rank": rankM, "Year": yearM, "Name": nameM, "Frequency": frequencyM}
         males_df = pd.DataFrame(males)
         males_df.to_csv(
-            "./saskatchwan/saskatchwanMales.csv", sep=",", index=False, encoding="utf-8"
+            "./saskatchwan/saskatchewanMales.csv",
+            sep=",",
+            index=False,
+            encoding="utf-8",
         )
 
 
