@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Team Armadillo Project</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        font-family: Poppins, Helvetica, sans-serif;
+        background-color: #dddddd;
+      }
+
+      body {
+        padding: 25px;
+      }
+
+      button {
+        font-size: 20px;
+        margin: 20px;
+        padding: 20px;
+        border-radius: 10px;
+        flex: 1;
+        color: white;
+        background-color: rgb(48, 48, 48);
+        cursor: pointer;
+        border: none;
+        transition-duration: 0.4s;
+      }
+
+      button:hover {
+        background-color: white;
+        color: black;
+        border: 1px solid black;
+      }
+
+      .tables {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .table {
+        display: none;
+      }
+
+      .table.show {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>{{ script }} script has been run!</h1>
+    <div class="tables">
+      <div class="table" id="male-table">
+        <h2>Male Data</h2>
+        {{ tableMale|safe }}
+        <a href="{{ url_for('download_csv', gender='male', script=script) }}"
+          >Download Male Names CSV</a
+        >
+      </div>
+
+      <div class="table" id="female-table">
+        <h2>Female Data</h2>
+        {{ tableFemale|safe }}
+        <a href="{{ url_for('download_csv', gender='female', script=script) }}"
+          >Download Female Names CSV</a
+        >
+      </div>
+    </div>
+
+    <button onclick="toggleMaleTable()">Show/Hide Male Names</button>
+    <button onclick="toggleFemaleTable()">Show/Hide Female Names</button>
+
+    <button onclick="window.location.href='/';">Back</button>
+    <button onclick="compare()">Compare</button>
+
+    <h2 id="latestCountry"></h2>
+    <button
+      id="common-names-btn"
+      style="display: none"
+      onclick="location.href='/common_names/{{ script }}/{{latestCountry }}'"
+    >
+      Find Common Names
+    </button>
+
+    <script>
+      var latestCountry = localStorage.getItem("latestCountry");
+
+      if (latestCountry && latestCountry != "{{ script }}") {
+        document.getElementById("latestCountry").innerHTML =
+          "Your latest country is: " + latestCountry;
+        document.getElementById("common-names-btn").style.display = "block";
+        document
+          .getElementById("common-names-btn")
+          .setAttribute(
+            "onclick",
+            "location.href='/common_names/{{ script }}/' + latestCountry"
+          );
+      } else {
+        document.getElementById("latestCountry").innerHTML =
+          "Latest country is equal to current country";
+      }
+
+      function compare() {
+        var latestCountry = "{{ script }}";
+        localStorage.setItem("latestCountry", latestCountry);
+        window.location.href = "/";
+      }
+
+      function toggleMaleTable() {
+        var table = document.getElementById("male-table");
+        table.classList.toggle("show");
+      }
+
+      function toggleFemaleTable() {
+        var table = document.getElementById("female-table");
+        table.classList.toggle("show");
+      }
+
+      function downloadCSV(gender, script) {
+        var csvUrl = `./${script}/${script}${gender}s.csv`;
+        var downloadLink = document.createElement("a");
+        downloadLink.href = csvUrl;
+        downloadLink.download = `${script}${gender}s.csv`;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+      }
+    </script>
+  </body>
+</html>

@@ -6,7 +6,7 @@ import pandas as pd
 
 def main(argv):
     currentYear = 1944
-    previousRank = 10  # 10 is greater than the first rank
+    previousRank = 0
     yearF = []
     nameF = []
     frequencyF = []
@@ -21,7 +21,7 @@ def main(argv):
         csvReader = csv.reader(csvDataFile, delimiter=",")
         for row in csvReader:
             # If the rank goes down it infers that the next year is being shown, thus change year
-            if previousRank < int(row[2]):
+            if previousRank > int(row[2]):
                 currentYear += 1
             nameF.append(row[0].title())
             yearF.append(currentYear)
@@ -30,12 +30,12 @@ def main(argv):
             previousRank = int(row[2])
 
     currentYear = 1944
-    previousRank = 10
+    previousRank = 0
     with open("./southAustralia/cleaned_male_cy1944-2021.csv") as csvDataFile:
         next(csvDataFile)
         csvReader = csv.reader(csvDataFile, delimiter=",")
         for row in csvReader:
-            if previousRank < int(row[2]):
+            if previousRank > int(row[2]):
                 currentYear += 1
             nameM.append(row[0].title())
             yearM.append(currentYear)

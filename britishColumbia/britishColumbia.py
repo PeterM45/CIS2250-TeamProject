@@ -1,4 +1,3 @@
-## TO RUN CODE: python ./britishColumbia.py bc-popular-boys-names.csv bc-popular-girls-names.csv
 import csv
 import time
 
@@ -41,7 +40,7 @@ def sortFrequency(person, year):
 
 
 # Define main
-def main(argv, fn, index):
+def main(argv, fn):
     # Initialize lists
     people = []
     names = {}
@@ -49,7 +48,7 @@ def main(argv, fn, index):
     start_year = 1922
     end_year = 2022
     count = 0
-    filename = argv[index]
+    filename = argv
     # Open csv file using encoding
     with open(filename, encoding="windows-1252") as csvfile:
         # Read csv file using csv.reader
@@ -102,8 +101,13 @@ def main(argv, fn, index):
 
 
 if __name__ == "__main__":
-    import sys
 
     # Sets the output file names
-    main(sys.argv, "./britishColumbia/britishColumbiaMales.csv", 1)
-    main(sys.argv, "./britishColumbia/britishColumbiaFemales.csv", 2)
+    main(
+        "./britishColumbia/bc-popular-boys-names.csv",
+        "./britishColumbia/britishColumbiaMales.csv",
+    )
+    main(
+        "./britishColumbia/bc-popular-girls-names.csv",
+        "./britishColumbia/britishColumbiaFemales.csv",
+    )

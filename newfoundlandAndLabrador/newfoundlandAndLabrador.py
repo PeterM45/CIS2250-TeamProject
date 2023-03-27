@@ -4,7 +4,8 @@ import os
 import pandas as pd
 
 # get the working directory of python code and files
-source_dir = os.getcwd()
+source_dir = os.getcwd() + "/newfoundlandAndLabrador"
+
 
 # Output file names
 boys_output_file = "./newfoundlandAndLabrador/newfoundlandAndLabradorMales.csv"

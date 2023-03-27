@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# This program is very similar to Nova Scotia's look on the comments there if confused, the only difference is some names contain an asterisk
+# This program is very similar to Nova Scotia's, look on the comments there if your confused. The only difference is some names contain an asterisk
 import sys
 import csv
 import pandas as pd

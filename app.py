@@ -1,6 +1,9 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, send_file
 import csv
 import pandas as pd
+import time
+import os
+
 
 app = Flask(__name__)
 
@@ -61,6 +64,37 @@ def run_unitedStates():
     exec(open("./unitedStates/unitedStates.py").read())
 
 
+def get_common_names(country1, country2, gender, year):
+    country1_names = []
+    country2_names = []
+    common_names = []
+
+    with open(
+        f"./{country1}/{country1}{gender.title()}.csv",
+        newline="",
+        encoding="iso-8859-1",
+    ) as csv_file:
+        csv_reader = csv.reader(csv_file)
+        next(csv_reader)  # skip the header row
+        for row in csv_reader:
+            if int(row[1]) == year:
+                country1_names.append(row[2])
+    with open(
+        f"./{country2}/{country2}{gender.title()}.csv",
+        newline="",
+        encoding="iso-8859-1",
+    ) as csv_file:
+        csv_reader = csv.reader(csv_file)
+        next(csv_reader)  # skip the header row
+        for row in csv_reader:
+            if int(row[1]) == year:
+                country2_names.append(row[2])
+    for name in country1_names:
+        if name in country2_names:
+            common_names.append(name)
+    return common_names
+
+
 """
 ROUTES
 """
@@ -101,11 +135,44 @@ def handle_form_submission():
     elif script == "unitedStates":
         run_unitedStates()
 
-    # Add elif clauses for the remaining scripts here...
-    return """
-          <button onclick="window.location.href='/';">Back</button> 
-          <h2>Script has been run!</h2>
-          """
+    df_male = pd.read_csv(f"./{script}/{script}Males.csv", encoding="ISO-8859-1")
+
+    df_female = pd.read_csv(f"./{script}/{script}Females.csv", encoding="ISO-8859-1")
+
+    # Get the top 10 names for each gender
+    top_male_names = df_male.head(10)
+    top_female_names = df_female.head(10)
+
+    # Render the DataFrames as HTML tables
+    table_male_html = top_male_names.to_html()
+    table_female_html = top_female_names.to_html()
+
+    return render_template(
+        "countryRan.html",
+        tableMale=table_male_html,
+        tableFemale=table_female_html,
+        script=script,
+    )
+
+
+@app.route("/download-csv/<string:gender>/<string:script>")
+def download_csv(gender, script):
+    filename = f"{script}/{script}{gender.capitalize()}s.csv"
+    return send_file(filename, as_attachment=True)
+
+
+@app.route("/common_names/<string:script>/<string:latestCountry>")
+def common_names(script, latestCountry):
+
+    commonNames = get_common_names(script, latestCountry, "Males", 2000)
+
+    # Your code to retrieve and process the common names goes here
+    return render_template(
+        "common_names.html",
+        country1=script,
+        country2=latestCountry,
+        common_names=commonNames,
+    )
 
 
 if __name__ == "__main__":
