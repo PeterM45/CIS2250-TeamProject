@@ -20,6 +20,9 @@ def run_australia():
     exec(open("./australia/australia.py").read())
 
 
+# http://127.0.0.1:5000/
+
+
 def run_britishColumbia():
     exec(open("./britishColumbia/britishColumbia.py").read())
 
@@ -100,6 +103,11 @@ ROUTES
 """
 
 
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template("404.html"), 404
+
+
 @app.route("/")
 def index():
     return render_template("./index.html")
@@ -144,8 +152,8 @@ def handle_form_submission():
     top_female_names = df_female.head(10)
 
     # Render the DataFrames as HTML tables
-    table_male_html = top_male_names.to_html()
-    table_female_html = top_female_names.to_html()
+    table_male_html = top_male_names.to_html(index=False)
+    table_female_html = top_female_names.to_html(index=False)
 
     return render_template(
         "countryRan.html",
@@ -161,16 +169,18 @@ def download_csv(gender, script):
     return send_file(filename, as_attachment=True)
 
 
-@app.route("/common_names/<string:script>/<string:latestCountry>")
-def common_names(script, latestCountry):
+@app.route(
+    "/common_names/<string:script>/<string:latestCountry>/<string:gender>/<int:year>"
+)
+def common_names(script, latestCountry, gender, year):
+    commonNames = get_common_names(script, latestCountry, gender, year)
 
-    commonNames = get_common_names(script, latestCountry, "Males", 2000)
-
-    # Your code to retrieve and process the common names goes here
     return render_template(
         "common_names.html",
         country1=script,
         country2=latestCountry,
+        gender=gender,
+        year=year,
         common_names=commonNames,
     )
 

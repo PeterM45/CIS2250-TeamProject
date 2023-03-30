@@ -42,7 +42,7 @@
 
       .tables {
         display: flex;
-        justify-content: space-between;
+        justify-content: space-around;
       }
 
       .table {
@@ -50,7 +50,20 @@
       }
 
       .table.show {
-        display: block;
+        display: table; /* change display to table instead of block */
+      }
+
+      tr th {
+        text-align: center;
+      }
+
+      .inputs {
+        padding: 15px;
+      }
+
+      #find-common-names {
+        padding-top: 50px;
+        font-weight: bold;
       }
     </style>
   </head>
@@ -78,14 +91,24 @@
     <button onclick="toggleFemaleTable()">Show/Hide Female Names</button>
 
     <button onclick="window.location.href='/';">Back</button>
-    <button onclick="compare()">Compare</button>
+    <br />
+    <button onclick="compare()">Compare to another location</button>
+
+    <div class="inputs">
+      <h2 id="find-common-names">Find Common Names</h2>
+      <p>Please select a gender and enter a year</p>
+      <h2>Select Gender:</h2>
+      <select id="gender-select">
+        <option value="Males">Males</option>
+        <option value="Females">Females</option>
+      </select>
+
+      <h2>Enter Year:</h2>
+      <input type="text" id="year-input" />
+    </div>
 
     <h2 id="latestCountry"></h2>
-    <button
-      id="common-names-btn"
-      style="display: none"
-      onclick="location.href='/common_names/{{ script }}/{{latestCountry }}'"
-    >
+    <button id="common-names-btn" style="display: none" onclick="">
       Find Common Names
     </button>
 
@@ -94,20 +117,47 @@
 
       if (latestCountry && latestCountry != "{{ script }}") {
         document.getElementById("latestCountry").innerHTML =
-          "Your latest country is: " + latestCountry;
+          "Your latest place is: " + latestCountry;
         document.getElementById("common-names-btn").style.display = "block";
+        var genderSelect = document.getElementById("gender-select");
+        var gender = genderSelect.options[genderSelect.selectedIndex].value;
+
+        var yearInput = document.getElementById("year-input");
+        var year = yearInput.value;
         document
           .getElementById("common-names-btn")
           .setAttribute(
             "onclick",
-            "location.href='/common_names/{{ script }}/' + latestCountry"
+            "location.href='/common_names/{{ script }}/' + latestCountry + '/' + gender + '/' + yearInput.value"
           );
       } else {
         document.getElementById("latestCountry").innerHTML =
-          "Latest country is equal to current country";
+          "Latest place is equal to current place";
+        document.querySelector(".inputs").style.display = "none";
+      }
+
+      function findCommonNames() {
+        var genderSelect = document.getElementById("gender-select");
+        var gender = genderSelect.options[genderSelect.selectedIndex].value;
+
+        var yearInput = document.getElementById("year-input");
+        var year = yearInput.value;
+
+        var url =
+          "/common_names/" +
+          "{{ script }}" +
+          "/" +
+          latestCountry +
+          "/" +
+          gender +
+          "/" +
+          year;
+        window.location.href = url;
       }
 
       function compare() {
+        alert("Warning this will override the previous country you selected.");
+
         var latestCountry = "{{ script }}";
         localStorage.setItem("latestCountry", latestCountry);
         window.location.href = "/";
