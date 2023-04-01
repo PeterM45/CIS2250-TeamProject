@@ -184,6 +184,11 @@ def common_names(script, latestCountry, gender, year):
         common_names=commonNames,
     )
 
+@app.route("/graphs")
+def show_graphs():
+    graph_dir = './static/graphs'
+    graph_files = os.listdir(graph_dir)
+    return render_template('graphs.html', graph_files=graph_files)
 
 if __name__ == "__main__":
     app.run(debug=True)

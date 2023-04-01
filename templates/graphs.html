@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Team Armadillo Project</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Owl Carousel CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
+    />
+
+    <!-- Owl Carousel JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+    <style>
+      * {
+        margin: 0;
+        font-family: Poppins, Helvetica, sans-serif;
+        background-color: #dddddd;
+      }
+
+      img {
+        height: 500px;
+      }
+
+      button {
+        font-size: 20px;
+        margin: 20px;
+        padding: 20px;
+        border-radius: 10px;
+        flex: 1;
+        color: white;
+        background-color: rgb(48, 48, 48);
+        cursor: pointer;
+        border: none;
+        transition-duration: 0.4s;
+      }
+
+      button:hover {
+        background-color: white;
+        color: black;
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <button onclick="window.history.back();">Go Back</button>
+
+    <div class="owl-carousel">
+      {% for image_name in graph_files %}
+      <div class="graph">
+        <h2>Graph {{ loop.index }}</h2>
+        <img
+          src="{{ url_for('static', filename='/graphs/' + image_name) }}"
+          alt="{{ image_name }}"
+        />
+      </div>
+      {% endfor %}
+    </div>
+
+    <script>
+      $(document).ready(function () {
+        $(".owl-carousel").owlCarousel({
+          items: 1,
+          loop: true,
+          margin: 10,
+          padding: 10,
+          nav: true,
+          dots: false,
+          autoplay: true,
+          autoplayTimeout: 3000,
+          autoplayHoverPause: true,
+        });
+      });
+    </script>
+  </body>
+</html>
