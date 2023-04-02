@@ -28,6 +28,10 @@
         background-color: #dddddd;
       }
 
+      h2 {
+        padding: 20px;
+      }
+
       img {
         height: 500px;
       }
@@ -50,46 +54,19 @@
         color: black;
         border: 1px solid black;
       }
-
-      .owl-nav i {
-        font-size: 52px;
-      }
-
-      p {
-        padding-left: 20px;
-      }
     </style>
   </head>
   <body>
     <button onclick="window.history.back();">Go Back</button>
-
-    <div class="owl-carousel">
-      {% for image_name in graph_files %}
-      <div class="graph">
-        <h2>Graph {{ loop.index }}</h2>
-        <img
-          src="{{ url_for('static', filename='/graphs/' + image_name) }}"
-          alt="{{ image_name }}"
-        />
-      </div>
-      {% endfor %}
+    <h2>Popular names in {{ country }} for {{ gender }}</h2>
+    <div class="names">
+      <ul>
+        {% for name, frequency in top_names %}
+        <li>{{ name }} ({{ '{:.0f}'.format(frequency) }})</li>
+        {% endfor %}
+      </ul>
     </div>
-    <p>Swipe or click the arrows to see more!</p>
 
-    <script>
-      $(document).ready(function () {
-        $(".owl-carousel").owlCarousel({
-          items: 1,
-          loop: true,
-          margin: 10,
-          nav: true,
-          dots: false,
-          autoplay: true,
-          autoplayTimeout: 3000,
-          autoplayHoverPause: true,
-          stagePadding: 30,
-        });
-      });
-    </script>
+    <script></script>
   </body>
 </html>

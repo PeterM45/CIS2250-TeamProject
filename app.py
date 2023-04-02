@@ -97,6 +97,19 @@ def get_common_names(country1, country2, gender, year):
             common_names.append(name)
     return common_names
 
+def most_popular_names(country, gender):
+    # Load the data for the given country and gender
+    df = pd.read_csv(f"{country}/{country}{gender}.csv", names=["Name", "Frequency"])
+
+    # Remove duplicates and sort by count in descending order, then get the top 10 names
+    df = df.drop_duplicates(subset=["Name"])
+    df["Frequency"] = pd.to_numeric(df["Frequency"], errors="coerce")
+    top_names = df.sort_values(by=["Frequency"], ascending=False).head(10)
+
+    # Return a list of tuples containing the name and count
+    return [(name, count) for name, count in zip(top_names["Name"], top_names["Frequency"])]
+
+
 
 """
 ROUTES
@@ -189,6 +202,11 @@ def show_graphs():
     graph_dir = './static/graphs'
     graph_files = os.listdir(graph_dir)
     return render_template('graphs.html', graph_files=graph_files)
+
+@app.route('/popular_names/<country>/<gender>')
+def popular_names(country, gender):
+    top_names = most_popular_names(country, gender)
+    return render_template('popular_names.html', country=country, gender=gender, top_names=top_names)
 
 if __name__ == "__main__":
     app.run(debug=True)

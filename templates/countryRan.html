@@ -94,6 +94,13 @@
     <br />
     <button onclick="compare()">Compare to another location</button>
 
+    <button id="popular-names-male-btn" class="btn btn-primary">
+      Get male popular names
+    </button>
+    <button id="popular-names-female-btn" class="btn btn-primary">
+      Get female popular names
+    </button>
+
     <div class="inputs">
       <h2 id="find-common-names">Find Common Names</h2>
       <p>Please select a gender and enter a year</p>
@@ -113,6 +120,20 @@
     </button>
 
     <script>
+      document
+        .getElementById("popular-names-male-btn")
+        .setAttribute(
+          "onclick",
+          "location.href='/popular_names/{{ script }}/Males';"
+        );
+
+      document
+        .getElementById("popular-names-female-btn")
+        .setAttribute(
+          "onclick",
+          "location.href='/popular_names/{{ script }}/Females';"
+        );
+
       var latestCountry = localStorage.getItem("latestCountry");
 
       if (latestCountry && latestCountry != "{{ script }}") {
