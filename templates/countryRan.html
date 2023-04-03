@@ -101,6 +101,7 @@
       Get female popular names
     </button>
 
+    <hr />
     <div class="inputs">
       <h2 id="find-common-names">Find Common Names</h2>
       <p>Please select a gender and enter a year</p>
@@ -111,7 +112,8 @@
       </select>
 
       <h2>Enter Year:</h2>
-      <input type="text" id="year-input" />
+      <input type="text" id="year-input" required />
+      <p>Min</p>
     </div>
 
     <h2 id="latestCountry"></h2>
@@ -133,7 +135,7 @@
           "onclick",
           "location.href='/popular_names/{{ script }}/Females';"
         );
-
+      //main part
       var latestCountry = localStorage.getItem("latestCountry");
 
       if (latestCountry && latestCountry != "{{ script }}") {
@@ -153,7 +155,7 @@
           );
       } else {
         document.getElementById("latestCountry").innerHTML =
-          "Latest place is equal to current place";
+          "You can't compare the same country";
         document.querySelector(".inputs").style.display = "none";
       }
 

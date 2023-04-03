@@ -1,3 +1,5 @@
+# http://127.0.0.1:5000/
+
 from flask import Flask, request, render_template, send_file
 import csv
 import pandas as pd
@@ -18,9 +20,6 @@ def run_alberta():
 
 def run_australia():
     exec(open("./australia/australia.py").read())
-
-
-# http://127.0.0.1:5000/
 
 
 def run_britishColumbia():
@@ -97,6 +96,7 @@ def get_common_names(country1, country2, gender, year):
             common_names.append(name)
     return common_names
 
+
 def most_popular_names(country, gender):
     # Load the data for the given country and gender
     df = pd.read_csv(f"{country}/{country}{gender}.csv", names=["Name", "Frequency"])
@@ -110,6 +110,29 @@ def most_popular_names(country, gender):
     return [(name, count) for name, count in zip(top_names["Name"], top_names["Frequency"])]
 
 
+'''
+function
+params: country, gender, year, name
+def: find how many times a name exists in a given year. if it does exists
+returns: frequency
+'''
+def name_finder(country, gender, year, name):
+    df = pd.read_csv(f"{country}/{country}{gender}.csv")
+    filtered_df = df[(df['year'] == year) & (df['name'] == name)]
+    count = len(filtered_df)
+    
+    return count if count else -1
+    
+
+# Return min max
+'''
+function
+params: country1, country2
+def: read the csv file, get the lowest value for year, get the highest value for year
+returns: min and max years as int
+'''
+
+
 
 """
 ROUTES
@@ -120,12 +143,12 @@ ROUTES
 def page_not_found(error):
     return render_template("404.html"), 404
 
-
+#decorator
 @app.route("/")
 def index():
     return render_template("./index.html")
 
-
+#main script
 @app.route("/run-script", methods=["POST"])
 def handle_form_submission():
     script = request.form["script"]
@@ -167,6 +190,7 @@ def handle_form_submission():
     # Render the DataFrames as HTML tables
     table_male_html = top_male_names.to_html(index=False)
     table_female_html = top_female_names.to_html(index=False)
+    
 
     return render_template(
         "countryRan.html",
@@ -207,6 +231,20 @@ def show_graphs():
 def popular_names(country, gender):
     top_names = most_popular_names(country, gender)
     return render_template('popular_names.html', country=country, gender=gender, top_names=top_names)
+
+@app.route('/name_finder/<country>/<gender>/<year>/<name>')
+def name_finder(country, gender, year, name):
+    
+    name_count = name_finder(country, gender, year, name)
+    
+    return render_template(
+        'name_finder.html',
+        country=country,
+        gender=gender,
+        year=year,
+        name=name,
+        name_count=name_count
+    )
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -58,16 +58,9 @@
   </head>
   <body>
     <button onclick="window.history.back();">Go Back</button>
-    <h2>Popular names in {{ country }} for {{ gender }}</h2>
+    <h2>Count of {{ name }} in {{ country }} for {{ gender }}</h2>
     <div class="names">
-      <ul>
-        {% for name, frequency in top_names %}
-        <li>
-          {{ name }} ({{ '{:.0f}'.format(frequency) if frequency!=-1 else 'N/A'
-          }})
-        </li>
-        {% endfor %}
-      </ul>
+      <h4>{{ name_count }}</h4>
     </div>
 
     <script></script>
