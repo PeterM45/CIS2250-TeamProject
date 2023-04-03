@@ -12,20 +12,15 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <!-- Owl Carousel CSS -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
-    />
-
-    <!-- Owl Carousel JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-
     <style>
       * {
         margin: 0;
         font-family: Poppins, Helvetica, sans-serif;
         background-color: #dddddd;
+      }
+
+      .display-count {
+        padding: 20px;
       }
 
       h2 {
@@ -58,9 +53,13 @@
   </head>
   <body>
     <button onclick="window.history.back();">Go Back</button>
-    <h2>Count of {{ name }} in {{ country }} for {{ gender }}</h2>
-    <div class="names">
-      <h4>{{ name_count }}</h4>
+    <div class="display-count">
+      <h1>{{ name }} Count in {{ country }} {{ gender }} {{ year }}</h1>
+      {% if name_count != -1 %}
+      <p>{{ name }} occurred {{ name_count }} times in {{ year }}</p>
+      {% else %}
+      <p>{{ name }} does not exist in {{ year }}</p>
+      {% endif %}
     </div>
 
     <script></script>

@@ -1,10 +1,11 @@
 # http://127.0.0.1:5000/
 
-from flask import Flask, request, render_template, send_file
+from flask import Flask, request, render_template, send_file, jsonify
 import csv
 import pandas as pd
 import time
 import os
+import numpy as np
 
 
 app = Flask(__name__)
@@ -107,31 +108,45 @@ def most_popular_names(country, gender):
     top_names = df.sort_values(by=["Frequency"], ascending=False).head(10)
 
     # Return a list of tuples containing the name and count
-    return [(name, count) for name, count in zip(top_names["Name"], top_names["Frequency"])]
+    return [
+        (name, count) for name, count in zip(top_names["Name"], top_names["Frequency"])
+    ]
 
 
-'''
+"""
 function
 params: country, gender, year, name
 def: find how many times a name exists in a given year. if it does exists
 returns: frequency
-'''
+"""
+
+
 def name_finder(country, gender, year, name):
     df = pd.read_csv(f"{country}/{country}{gender}.csv")
-    filtered_df = df[(df['year'] == year) & (df['name'] == name)]
+    filtered_df = df[(df["year"] == year) & (df["name"] == name)]
+
+    if filtered_df.empty:
+        return -1
+
     count = len(filtered_df)
-    
-    return count if count else -1
-    
+
+    return count
+
 
 # Return min max
-'''
+"""
 function
 params: country1, country2
 def: read the csv file, get the lowest value for year, get the highest value for year
 returns: min and max years as int
-'''
+"""
 
+
+def get_min_max_years(country, gender):
+    df = pd.read_csv(f"{country}/{country}{gender}.csv")
+    min_year = df["year"].min()
+    max_year = df["year"].max()
+    return min_year, max_year
 
 
 """
@@ -143,12 +158,14 @@ ROUTES
 def page_not_found(error):
     return render_template("404.html"), 404
 
-#decorator
+
+# decorator
 @app.route("/")
 def index():
     return render_template("./index.html")
 
-#main script
+
+# main script
 @app.route("/run-script", methods=["POST"])
 def handle_form_submission():
     script = request.form["script"]
@@ -187,16 +204,24 @@ def handle_form_submission():
     top_male_names = df_male.head(10)
     top_female_names = df_female.head(10)
 
-    # Render the DataFrames as HTML tables
+    # Get the smallest and highest years for each gender
+    min_male_year = df_male["Year"].min()
+    max_male_year = df_male["Year"].max()
+    min_female_year = df_female["Year"].min()
+    max_female_year = df_female["Year"].max()
+
+    # Render the DataFrames as HTML tables and pass the smallest and highest years to the template
     table_male_html = top_male_names.to_html(index=False)
     table_female_html = top_female_names.to_html(index=False)
-    
-
     return render_template(
         "countryRan.html",
         tableMale=table_male_html,
         tableFemale=table_female_html,
         script=script,
+        minMaleYear=min_male_year,
+        maxMaleYear=max_male_year,
+        minFemaleYear=min_female_year,
+        maxFemaleYear=max_female_year,
     )
 
 
@@ -221,30 +246,85 @@ def common_names(script, latestCountry, gender, year):
         common_names=commonNames,
     )
 
+
 @app.route("/graphs")
 def show_graphs():
-    graph_dir = './static/graphs'
+    graph_dir = "./static/graphs"
     graph_files = os.listdir(graph_dir)
-    return render_template('graphs.html', graph_files=graph_files)
+    return render_template("graphs.html", graph_files=graph_files)
 
-@app.route('/popular_names/<country>/<gender>')
+
+@app.route("/popular_names/<country>/<gender>")
 def popular_names(country, gender):
     top_names = most_popular_names(country, gender)
-    return render_template('popular_names.html', country=country, gender=gender, top_names=top_names)
-
-@app.route('/name_finder/<country>/<gender>/<year>/<name>')
-def name_finder(country, gender, year, name):
-    
-    name_count = name_finder(country, gender, year, name)
-    
     return render_template(
-        'name_finder.html',
+        "popular_names.html", country=country, gender=gender, top_names=top_names
+    )
+
+
+@app.route("/name_finder/<country>/<gender>/<year>/<name>")
+def name_finder(country, gender, year, name):
+    df = pd.read_csv(f"{country}/{country}{gender}.csv", encoding="ISO-8859-1")
+    filtered_df = df[(df["Year"] == int(year)) & (df["Name"] == name)]
+    name_count = filtered_df["Frequency"].values[0] if not filtered_df.empty else -1
+
+    return render_template(
+        "name_finder.html",
         country=country,
         gender=gender,
         year=year,
         name=name,
-        name_count=name_count
+        name_count=name_count,
     )
+
+
+@app.route("/get-year-range", methods=["GET", "POST"])
+def get_year_range():
+    latest_country = request.args.get("latestCountry")
+    script = request.args.get("script")
+
+    # Read in the CSV data
+    df_male = pd.read_csv(f"./{script}/{script}Males.csv", encoding="ISO-8859-1")
+    df_female = pd.read_csv(f"./{script}/{script}Females.csv", encoding="ISO-8859-1")
+    df_latest_male = pd.read_csv(
+        f"./{latest_country}/{latest_country}Males.csv", encoding="ISO-8859-1"
+    )
+    df_latest_female = pd.read_csv(
+        f"./{latest_country}/{latest_country}Females.csv", encoding="ISO-8859-1"
+    )
+
+    # Find the minimum and maximum years in the data
+    min_year = max(
+        df_male["Year"].min(),
+        df_female["Year"].min(),
+        df_latest_male["Year"].min(),
+        df_latest_female["Year"].min(),
+    )
+    max_year = min(
+        df_male["Year"].max(),
+        df_female["Year"].max(),
+        df_latest_male["Year"].max(),
+        df_latest_female["Year"].max(),
+    )
+
+    # Filter the data by gender and year
+    if "year" in request.form:
+        year = int(request.form["year"])
+        male_filter = df_male["Year"] == year
+        female_filter = df_female["Year"] == year
+        latest_male_filter = df_latest_male["Year"] >= year
+        latest_female_filter = df_latest_female["Year"] >= year
+    else:
+        male_filter = df_male["Year"] == df_male["Year"].min()
+        female_filter = df_female["Year"] == df_female["Year"].min()
+        latest_male_filter = df_latest_male["Year"] >= df_latest_male["Year"].min()
+        latest_female_filter = (
+            df_latest_female["Year"] >= df_latest_female["Year"].min()
+        )
+
+    # Return the result
+    return jsonify({"minYear": int(min_year), "maxYear": int(max_year)})
+
 
 if __name__ == "__main__":
     app.run(debug=True)
