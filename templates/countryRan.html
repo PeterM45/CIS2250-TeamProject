@@ -70,12 +70,25 @@
 
       .req4-options {
         display: flex;
+        width: 100%;
+        flex-wrap: true;
         justify-content: space-evenly;
+      }
+
+      .inputs3 {
+        padding-top: 40px;
+      }
+
+      input {
+        border-radius: 5px;
+        border: 2px solid black;
+        background-color: white;
       }
     </style>
   </head>
   <body>
     <h1>{{ script }} script has been run!</h1>
+
     <div class="tables">
       <div class="table" id="male-table">
         <h2>Male Data</h2>
@@ -94,12 +107,15 @@
       </div>
     </div>
 
+    <button onclick="window.location.href='/';">Back</button>
+
     <button onclick="toggleMaleTable()">Show/Hide Male Names</button>
     <button onclick="toggleFemaleTable()">Show/Hide Female Names</button>
 
-    <button onclick="window.location.href='/';">Back</button>
     <br />
-    <button onclick="compare()">Compare to another location</button>
+    <button onclick="compare()" style="background-color: coral">
+      Compare to another location
+    </button>
 
     <button id="popular-names-male-btn" class="btn btn-primary">
       Get male popular names
@@ -121,11 +137,15 @@
         </select>
 
         <h2>Enter Year:</h2>
-        <input type="text" id="year-input" required />
+        <input type="number" id="year-input" required />
         <p>Min: <span id="min-year"></span></p>
         <p>Max: <span id="max-year"></span></p>
 
-        <button id="common-names-btn" style="display: none" onclick="">
+        <button
+          id="common-names-btn"
+          style="display: none; background-color: coral"
+          onclick=""
+        >
           Find Common Names
         </button>
       </div>
@@ -141,7 +161,7 @@
         </select>
 
         <h2>Enter Year:</h2>
-        <input type="text" id="year-input-name" required />
+        <input type="number" id="year-input-name" required />
         <p>Range of years for Males: {{ minMaleYear }} - {{ maxMaleYear }}</p>
         <p>
           Range of years for Females: {{ minFemaleYear }} - {{ maxFemaleYear }}
@@ -152,6 +172,21 @@
         <br />
 
         <button id="name-finder-btn" onclick="nameFinder()">Find Name</button>
+      </div>
+
+      <hr />
+      <br />
+      <div class="inputs3">
+        <h2 id="find-gender-names">Find Gender Neutral Names</h2>
+        <p>Please enter a year</p>
+        <h2>Enter Year:</h2>
+        <input type="number" id="year-input-gender" required />
+        <p>Range of years for Males: {{ minMaleYear }} - {{ maxMaleYear }}</p>
+        <p>
+          Range of years for Females: {{ minFemaleYear }} - {{ maxFemaleYear }}
+        </p>
+
+        <button id="name-gender-btn" onclick="genderNames()">Find Names</button>
       </div>
     </div>
 
@@ -170,17 +205,20 @@
           "location.href='/popular_names/{{ script }}/Females';"
         );
       //main part
+
       var latestCountry = localStorage.getItem("latestCountry");
 
       if (latestCountry && latestCountry != "{{ script }}") {
         document.getElementById("latestCountry").innerHTML =
           "Your latest place is: " + latestCountry;
         document.getElementById("common-names-btn").style.display = "block";
+
         var genderSelect = document.getElementById("gender-select");
         var gender = genderSelect.options[genderSelect.selectedIndex].value;
 
         var yearInput = document.getElementById("year-input");
         var year = yearInput.value;
+
         document
           .getElementById("common-names-btn")
           .setAttribute(
@@ -245,6 +283,11 @@
         const year = document.getElementById("year-input-name").value;
         const name = document.getElementById("name-input-name").value;
         window.location.href = `/name_finder/{{ script }}/${gender}/${year}/${name}`;
+      }
+
+      function genderNames() {
+        const year = document.getElementById("year-input-gender").value;
+        window.location.href = `/gender_neutral/{{ script }}/${year}`;
       }
 
       $.ajax({

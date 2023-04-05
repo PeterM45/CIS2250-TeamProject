@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ country1 }} and {{ country2 }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        font-family: Poppins, Helvetica, sans-serif;
+        background-color: #dddddd;
+      }
+
+      body {
+        padding: 25px;
+      }
+
+      h1,
+      h3 {
+        margin: 20px;
+      }
+
+      .scripts {
+        display: flex;
+        flex-direction: row;
+        width: 100vw;
+        justify-content: center;
+        gap: 200px;
+      }
+
+      .scripts-form {
+        margin: 20px;
+        display: flex;
+        flex-direction: column;
+        width: 300px;
+        flex-wrap: wrap;
+      }
+
+      button {
+        font-size: 20px;
+        margin: 20px;
+        padding: 20px;
+        border-radius: 10px;
+        flex: 1;
+        color: white;
+        background-color: rgb(48, 48, 48);
+        cursor: pointer;
+        border: none;
+        transition-duration: 0.4s;
+      }
+
+      button:hover {
+        background-color: white;
+        color: black;
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <button onclick="window.history.back();">Back</button>
+    <br />
+
+    Finding gender neutral names in {{ country|title }} for the year {{ year }}
+    {% block content %}
+    <h1>Gender Neutral Names</h1>
+    <p>Here are the gender neutral names for {{ country }}:</p>
+    {% if gender_neutral_names %}
+    <ul>
+      {% for name in gender_neutral_names %}
+      <li>{{ name }}</li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>No gender neutral names found. Try changing the year.</p>
+    {% endif %} {% endblock %}
+  </body>
+</html>

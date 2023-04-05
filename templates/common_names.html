@@ -64,6 +64,8 @@
     </style>
   </head>
   <body>
+    <button onclick="window.history.back();">Back</button>
+    <br />
     Comparing {{ country1|title }} and {{ country2|title }} {{ gender }} in the
     year {{ year }} {% block content %}
     <h1>Common Names</h1>
@@ -77,7 +79,5 @@
     {% else %}
     <p>No common names found. Try changing the year</p>
     {% endif %} {% endblock %}
-
-    <button onclick="window.history.back();">Back</button>
   </body>
 </html>

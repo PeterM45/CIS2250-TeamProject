@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Team Armadillo Project</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        font-family: Poppins, Helvetica, sans-serif;
+        background-color: #dddddd;
+      }
+
+      body {
+        padding: 20px;
+      }
+
+      input {
+        border-radius: 5px;
+        border: 2px solid black;
+        background-color: white;
+      }
+
+      h1 {
+        padding-bottom: 20px;
+      }
+
+      button {
+        font-size: 20px;
+        margin: 10px;
+        padding: 20px;
+        border-radius: 10px;
+        flex: 1;
+        color: white;
+        background-color: rgb(48, 48, 48);
+        cursor: pointer;
+        border: none;
+        transition-duration: 0.4s;
+      }
+
+      button:hover {
+        background-color: white;
+        color: black;
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Check Ethnicity for Name</h1>
+
+    <form id="ethnic-form">
+      <label for="ethnic-name-input">Name:</label>
+      <input type="text" id="ethnic-name-input" />
+      <br />
+      <button type="submit">Submit</button>
+    </form>
+    <div id="results"></div>
+
+    <button style="margin-bottom: 50px" onclick="window.location.href='/';">
+      Back
+    </button>
+
+    <script>
+      let countryCodeToData = {};
+      const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
+
+      const form = document.querySelector("form");
+      const resultsDiv = document.querySelector("#results");
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const name = document.querySelector("#ethnic-name-input").value;
+        const apiUrl = `https://api.nationalize.io?name=${name}`;
+        fetch(apiUrl)
+          .then((response) => response.json())
+          .then((data) => {
+            countryCodeToData = {};
+            data.country.forEach((c) => {
+              countryCodeToData[c.country_id] = {
+                name: regionNames.of(c.country_id),
+                probability: (c.probability * 100).toFixed(2) + "%",
+              };
+            });
+            console.log(countryCodeToData);
+            const sortedCountries = Object.entries(countryCodeToData).sort(
+              (a, b) => b[1].probability - a[1].probability
+            );
+            const resultList = document.createElement("ul");
+            sortedCountries.forEach((entry) => {
+              const countryData = entry[1];
+              const listItem = document.createElement("li");
+              listItem.textContent = `${countryData.name}: ${countryData.probability}`;
+              resultList.appendChild(listItem);
+            });
+            resultsDiv.innerHTML = "";
+            resultsDiv.appendChild(resultList);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      });
+    </script>
+  </body>
+</html>

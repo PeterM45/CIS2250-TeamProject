@@ -149,6 +149,22 @@ def get_min_max_years(country, gender):
     return min_year, max_year
 
 
+# TODO: find gender neutral names, (country, year)
+# Returns the names appearing in both male and female files of that country for that year
+def get_gender_neutral(country, year):
+    
+    male_df = pd.read_csv(f"{country}/{country}Males.csv", encoding="ISO-8859-1")
+    female_df = pd.read_csv(f"{country}/{country}Females.csv", encoding="ISO-8859-1")
+
+    # Extract the names that appear in both files
+    male_names = set(male_df["Name"])
+    female_names = set(female_df["Name"])
+    gender_neutral_names = male_names.intersection(female_names)
+    
+    return gender_neutral_names
+    
+
+
 """
 ROUTES
 """
@@ -276,6 +292,20 @@ def name_finder(country, gender, year, name):
         name=name,
         name_count=name_count,
     )
+    
+@app.route("/gender_neutral/<country>/<year>")
+def gender_neutral(country, year):
+    
+    gender_neutral_names = get_gender_neutral(country, year)
+    
+    return render_template(
+        "gender_neutral.html",
+        country=country,
+        year=year,
+        gender_neutral_names=gender_neutral_names
+    )
+
+
 
 
 @app.route("/get-year-range", methods=["GET", "POST"])
@@ -324,6 +354,10 @@ def get_year_range():
 
     # Return the result
     return jsonify({"minYear": int(min_year), "maxYear": int(max_year)})
+
+@app.route("/ethnicity")
+def ethnicity_names():
+    return render_template("ethnic_name.html")
 
 
 if __name__ == "__main__":

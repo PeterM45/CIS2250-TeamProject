@@ -58,16 +58,16 @@
   </head>
   <body>
     <button onclick="window.history.back();">Go Back</button>
-    <h2>Popular names in {{ country }} for {{ gender }}</h2>
+    <h2>Top 10 names in {{ country }} for {{ gender }}</h2>
     <div class="names">
-      <ul>
+      <ol>
         {% for name, frequency in top_names %}
         <li>
           {{ name }} ({{ '{:.0f}'.format(frequency) if frequency!=-1 else 'N/A'
           }})
         </li>
         {% endfor %}
-      </ul>
+      </ol>
     </div>
 
     <script></script>
