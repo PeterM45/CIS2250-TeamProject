@@ -11,22 +11,27 @@
       href="https://fonts.googleapis.com/css2?family=Poppins&family=Space+Mono:wght@400;700&display=swap"
       rel="stylesheet"
     />
+    <!-- CSS Styling -->
     <style>
+      /* Set margin and font-family to all elements, and background color to gray */
       * {
         margin: 0;
         font-family: Poppins, Helvetica, sans-serif;
         background-color: #dddddd;
       }
 
+      /* Set padding for the body element */
       body {
         padding: 25px;
       }
 
+      /* Set margin for heading elements */
       h1,
       h3 {
         margin: 20px;
       }
 
+      /* Set display, flex-direction, width, justify-content, and gap for the scripts class */
       .scripts {
         display: flex;
         flex-direction: row;
@@ -56,6 +61,7 @@
         transition-duration: 0.4s;
       }
 
+      /* Set background-color, color, and border for the hover state of buttons */
       button:hover {
         background-color: white;
         color: black;
@@ -64,13 +70,17 @@
     </style>
   </head>
   <body>
+    <!-- Back button -->
     <button onclick="window.history.back();">Back</button>
     <br />
 
+    <!-- Display the country and year for which gender-neutral names are being found -->
     Finding gender neutral names in {{ country|title }} for the year {{ year }}
     {% block content %}
     <h1>Gender Neutral Names</h1>
+    <!-- Display the country for which gender-neutral names are being found -->
     <p>Here are the gender neutral names for {{ country }}:</p>
+    <!-- Check if gender-neutral names are found for the given country and year -->
     {% if gender_neutral_names %}
     <ul>
       {% for name in gender_neutral_names %}

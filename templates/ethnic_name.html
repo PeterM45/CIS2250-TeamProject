@@ -69,17 +69,24 @@
 
     <script>
       let countryCodeToData = {};
+      // get country names in full form
       const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
 
       const form = document.querySelector("form");
       const resultsDiv = document.querySelector("#results");
+      // when submit button is pressed
       form.addEventListener("submit", (event) => {
+        // dont reload the page
         event.preventDefault();
         const name = document.querySelector("#ethnic-name-input").value;
+        // fetch the api
         const apiUrl = `https://api.nationalize.io?name=${name}`;
         fetch(apiUrl)
           .then((response) => response.json())
           .then((data) => {
+            // convert yhe 2-letter codes to the full name
+            // also reformat the probability
+
             countryCodeToData = {};
             data.country.forEach((c) => {
               countryCodeToData[c.country_id] = {
@@ -88,9 +95,11 @@
               };
             });
             console.log(countryCodeToData);
+            // sort the countries in descending order
             const sortedCountries = Object.entries(countryCodeToData).sort(
               (a, b) => b[1].probability - a[1].probability
             );
+            // display the data as an unordered list
             const resultList = document.createElement("ul");
             sortedCountries.forEach((entry) => {
               const countryData = entry[1];

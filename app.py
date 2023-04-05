@@ -12,6 +12,8 @@ app = Flask(__name__)
 
 """
 SCRIPT FUNCTIONS
+Will run the script when the route is called on the
+specific button clicked
 """
 
 
@@ -67,6 +69,8 @@ def run_unitedStates():
     exec(open("./unitedStates/unitedStates.py").read())
 
 
+# Get the common names given two countries, a gender, and a year
+# this will return the common names aas a list
 def get_common_names(country1, country2, gender, year):
     country1_names = []
     country2_names = []
@@ -97,7 +101,8 @@ def get_common_names(country1, country2, gender, year):
             common_names.append(name)
     return common_names
 
-
+# Finds the top 10 most popular names of a given country and gender
+# returns a tuple of name and count
 def most_popular_names(country, gender):
     # Load the data for the given country and gender
     df = pd.read_csv(f"{country}/{country}{gender}.csv", names=["Name", "Frequency"])
@@ -169,13 +174,14 @@ def get_gender_neutral(country, year):
 ROUTES
 """
 
-
+# 404 page route
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template("404.html"), 404
 
 
 # decorator
+# Home page
 @app.route("/")
 def index():
     return render_template("./index.html")
@@ -241,12 +247,13 @@ def handle_form_submission():
     )
 
 
+# to download the csv data
 @app.route("/download-csv/<string:gender>/<string:script>")
 def download_csv(gender, script):
     filename = f"{script}/{script}{gender.capitalize()}s.csv"
     return send_file(filename, as_attachment=True)
 
-
+# route that will show the common names
 @app.route(
     "/common_names/<string:script>/<string:latestCountry>/<string:gender>/<int:year>"
 )
@@ -262,7 +269,7 @@ def common_names(script, latestCountry, gender, year):
         common_names=commonNames,
     )
 
-
+# route to show the graphs
 @app.route("/graphs")
 def show_graphs():
     graph_dir = "./static/graphs"
@@ -270,6 +277,7 @@ def show_graphs():
     return render_template("graphs.html", graph_files=graph_files)
 
 
+# display popular names
 @app.route("/popular_names/<country>/<gender>")
 def popular_names(country, gender):
     top_names = most_popular_names(country, gender)
@@ -277,7 +285,7 @@ def popular_names(country, gender):
         "popular_names.html", country=country, gender=gender, top_names=top_names
     )
 
-
+# to find a given name
 @app.route("/name_finder/<country>/<gender>/<year>/<name>")
 def name_finder(country, gender, year, name):
     df = pd.read_csv(f"{country}/{country}{gender}.csv", encoding="ISO-8859-1")
@@ -293,7 +301,7 @@ def name_finder(country, gender, year, name):
         name_count=name_count,
     )
 
-
+# display gender neutral names
 @app.route("/gender_neutral/<country>/<int:year>")
 def gender_neutral(country, year):
 
@@ -306,7 +314,8 @@ def gender_neutral(country, year):
         gender_neutral_names=gender_names,
     )
 
-
+# get the min/max of years to know the range
+# this is an API endpoint that returns the min/max in JSON format
 @app.route("/get-year-range", methods=["GET", "POST"])
 def get_year_range():
     latest_country = request.args.get("latestCountry")
@@ -354,7 +363,7 @@ def get_year_range():
     # Return the result
     return jsonify({"minYear": int(min_year), "maxYear": int(max_year)})
 
-
+# show ethnic names
 @app.route("/ethnicity")
 def ethnicity_names():
     return render_template("ethnic_name.html")

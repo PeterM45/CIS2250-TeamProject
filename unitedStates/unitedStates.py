@@ -5,6 +5,7 @@ import pandas as pd
 
 
 def main(argv):
+    # Initialize empty lists and counters
     rankF = []
     rankM = []
     rankCounterF = 1
@@ -22,6 +23,7 @@ def main(argv):
     frequencyM = []
     previousGender = "F"
 
+    # Open and read the csv file containing the data
     with open("./unitedStates/yob1880-2021.txt") as csvDataFile:
         next(csvDataFile)
         csvReader = csv.reader(csvDataFile, delimiter=",")
@@ -39,7 +41,7 @@ def main(argv):
                 if previousFrequencyF == row[2]:
                     tiedRanksF += 1
                     rankF.append(rankCounterF - tiedRanksF)
-                else:
+                else: #If current frequency is different from previous frequency
                     rankF.append(rankCounterF)
                     tiedRanksF = 0
                 previousFrequencyF = row[2]
@@ -52,13 +54,13 @@ def main(argv):
                 if previousFrequencyM == row[2]:
                     tiedRanksM += 1
                     rankM.append(rankCounterM - tiedRanksM)
-                else:
+                else: #If current frequency is different from previous frequency
                     rankM.append(rankCounterM)
                     tiedRanksM = 0
                 previousFrequencyM = row[2]
                 rankCounterM += 1
 
-                yearM.append(currentYear)
+                yearM.append(currentYear) # Append the current year to the year list for males
                 nameM.append(row[0].title())
                 frequencyM.append(row[2])
             previousGender = row[1]

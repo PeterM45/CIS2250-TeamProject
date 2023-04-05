@@ -5,14 +5,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Team Armadillo Project</title>
+    <!-- Link to Google Fonts -->
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins&family=Space+Mono:wght@400;700&display=swap"
       rel="stylesheet"
     />
 
+    <!-- Link to jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
+      /* Set default styles for all elements */
       * {
         margin: 0;
         font-family: Poppins, Helvetica, sans-serif;
@@ -54,6 +57,7 @@
   <body>
     <button onclick="window.history.back();">Go Back</button>
     <div class="display-count">
+      <!-- Display the name count in a heading -->
       <h1>{{ name }} Count in {{ country }} {{ gender }} {{ year }}</h1>
       {% if name_count != -1 %}
       <p>{{ name }} occurred {{ name_count }} times in {{ year }}</p>

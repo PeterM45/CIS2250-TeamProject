@@ -191,6 +191,7 @@
     </div>
 
     <script>
+      // get popular names for male/female when btn is clicked
       document
         .getElementById("popular-names-male-btn")
         .setAttribute(
@@ -204,8 +205,9 @@
           "onclick",
           "location.href='/popular_names/{{ script }}/Females';"
         );
-      //main part
 
+      //main part
+      // get the laterst country from local storage
       var latestCountry = localStorage.getItem("latestCountry");
 
       if (latestCountry && latestCountry != "{{ script }}") {
@@ -218,6 +220,7 @@
         document.querySelector(".inputs").style.display = "none";
       }
 
+      // when this buttons clicked you will be sent to the common_names route
       function commonNamesBtn() {
         var genderSelect = document.getElementById("gender-select");
         var gender = genderSelect.options[genderSelect.selectedIndex].value;
@@ -247,6 +250,7 @@
         window.location.href = url;
       }
 
+      // set a latest country and store it in the local storage
       function compare() {
         alert("Warning this will override the previous country you selected.");
 
@@ -255,6 +259,7 @@
         window.location.href = "/";
       }
 
+      // Toggle the tables on button click
       function toggleMaleTable() {
         var table = document.getElementById("male-table");
         table.classList.toggle("show");
@@ -275,6 +280,7 @@
         document.body.removeChild(downloadLink);
       }
 
+      // finds a given name
       function nameFinder() {
         const gender = document.getElementById("gender-select-name").value;
         const year = document.getElementById("year-input-name").value;
@@ -282,11 +288,13 @@
         window.location.href = `/name_finder/{{ script }}/${gender}/${year}/${name}`;
       }
 
+      // find gender neutral names
       function genderNames() {
         const year = document.getElementById("year-input-gender").value;
         window.location.href = `/gender_neutral/{{ script }}/${year}`;
       }
 
+      // fetch our API endpoint to get the min/max years
       $.ajax({
         type: "GET",
         url: "/get-year-range",
