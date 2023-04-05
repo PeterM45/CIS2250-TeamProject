@@ -144,7 +144,7 @@
         <button
           id="common-names-btn"
           style="display: none; background-color: coral"
-          onclick=""
+          onclick="commonNamesBtn()"
         >
           Find Common Names
         </button>
@@ -212,23 +212,20 @@
         document.getElementById("latestCountry").innerHTML =
           "Your latest place is: " + latestCountry;
         document.getElementById("common-names-btn").style.display = "block";
+      } else {
+        document.getElementById("latestCountry").innerHTML =
+          "You can't compare the same country";
+        document.querySelector(".inputs").style.display = "none";
+      }
 
+      function commonNamesBtn() {
         var genderSelect = document.getElementById("gender-select");
         var gender = genderSelect.options[genderSelect.selectedIndex].value;
 
         var yearInput = document.getElementById("year-input");
         var year = yearInput.value;
 
-        document
-          .getElementById("common-names-btn")
-          .setAttribute(
-            "onclick",
-            "location.href='/common_names/{{ script }}/' + latestCountry + '/' + gender + '/' + yearInput.value"
-          );
-      } else {
-        document.getElementById("latestCountry").innerHTML =
-          "You can't compare the same country";
-        document.querySelector(".inputs").style.display = "none";
+        window.location.href = `/common_names/{{ script }}/${latestCountry}/${gender}/${year}`;
       }
 
       function findCommonNames() {
