@@ -12,6 +12,8 @@ To run this project
 
 Make sure you pip install pandas and flask!
 
+cd into the project directory
+
 Then in the terminal of the main directory run
 
 ```bash
